@@ -1,0 +1,47 @@
+name: "Simple Calculator"
+description: "Performs basic math operations"
+
+inputs:
+  number1:
+    description: "First number"
+    required: true
+  number2:
+    description: "Second number"
+    required: true
+  operation:
+    description: "Operation (add/subtract/multiply)"
+    required: false
+    default: "add"
+
+outputs:
+  result:
+    description: "Calculation result"
+    value: ${{ steps.calculate.outputs.result }}
+  message:
+    description: "Descriptive message"
+    value: ${{ steps.calculate.outputs.message }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Calculate
+      id: calculate
+      shell: bash
+      run: |
+        NUM1=${{ inputs.number1 }}
+        NUM2=${{ inputs.number2 }}
+        OP=${{ inputs.operation }}
+        
+        if [ "$OP" == "add" ]; then
+          RESULT=$((NUM1 + NUM2))
+          MSG="$NUM1 + $NUM2 = $RESULT"
+        elif [ "$OP" == "subtract" ]; then
+          RESULT=$((NUM1 - NUM2))
+          MSG="$NUM1 - $NUM2 = $RESULT"
+        elif [ "$OP" == "multiply" ]; then
+          RESULT=$((NUM1 * NUM2))
+          MSG="$NUM1 × $NUM2 = $RESULT"
+        fi
+        
+        echo "result=$RESULT" >> $GITHUB_OUTPUT
+        echo "message=$MSG" >> $GITHUB_OUTPUT
