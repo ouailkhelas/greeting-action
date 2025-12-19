@@ -1,23 +1,39 @@
-name: "Personalized Greeting"
-description: "Greets a person in different languages"
+name: "Custom Greeting Action"
+description: "Greets someone in different languages"
+
 inputs:
   name:
-    description: "Name of the person"
+    description: "Person's name to greet"
     required: true
   language:
-    description: "Language (fr/en/ar)"
+    description: "Language code (fr/en/ar)"
     required: false
     default: "en"
+
 runs:
   using: "composite"
   steps:
-    - name: greeting
+    - name: Display greeting
       shell: bash
       run: |
-        if [ "${{ inputs.language }}" == "fr" ]; then
-          echo "Bonjour ${{ inputs.name }} !"
-        elif [ "${{ inputs.language }}" == "en" ]; then
-          echo "Hello ${{ inputs.name }}!"
-        elif [ "${{ inputs.language }}" == "ar" ]; then
-          echo "مرحبا ${{ inputs.name }} !"
+        # Check if name is provided
+        if [ "${{ inputs.name }}" == "" ]; then
+          echo "❌ Error: Name is required"
+          exit 1
         fi
+        
+        # Display greeting based on language
+        case "${{ inputs.language }}" in
+          "fr")
+            echo "🇫🇷 Bonjour ${{ inputs.name }} !"
+            ;;
+          "en")
+            echo "🇬🇧 Hello ${{ inputs.name }}!"
+            ;;
+          "ar")
+            echo "🇩🇿 مرحبا ${{ inputs.name }} !"
+            ;;
+          *)
+            echo "👋 Hi ${{ inputs.name }}!"
+            ;;
+        esac
