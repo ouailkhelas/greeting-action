@@ -1,0 +1,23 @@
+name: "Personalized Greeting"
+description: "Greets a person in different languages"
+inputs:
+  name:
+    description: "Name of the person"
+    required: true
+  language:
+    description: "Language (fr/en/ar)"
+    required: false
+    default: "en"
+runs:
+  using: "composite"
+  steps:
+    - name: greeting
+      shell: bash
+      run: |
+        if [ "${{ inputs.language }}" == "fr" ]; then
+          echo "Bonjour ${{ inputs.name }} !"
+        elif [ "${{ inputs.language }}" == "en" ]; then
+          echo "Hello ${{ inputs.name }}!"
+        elif [ "${{ inputs.language }}" == "ar" ]; then
+          echo "مرحبا ${{ inputs.name }} !"
+        fi
